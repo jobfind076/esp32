@@ -60,17 +60,17 @@ void app_main(void)
     };
     gpio_config(&io_conf);
 
-    // 1. Конфігурація GPIO для транзистора з LED
+    // 2. Конфігурація GPIO для транзистора з LED
     gpio_reset_pin(PWM_GPIO);
     gpio_set_direction(PWM_GPIO, GPIO_MODE_OUTPUT);
 
-    // 2. Ініціалізація та встановлення сервісу переривань GPIO
+    // 3. Ініціалізація та встановлення сервісу переривань GPIO
     gpio_install_isr_service(ESP_INTR_FLAG_DEFAULT);
     
-    // 3. Додаємо обробник для конкретного піна кнопки
+    // 4. Додаємо обробник для конкретного піна кнопки
     gpio_isr_handler_add(BUTTON_GPIO, gpio_isr_handler, (void*) BUTTON_GPIO);
 
-    // 4. Конфігурація LEDC Таймера
+    // 5. Конфігурація LEDC Таймера
     ledc_timer_config_t ledc_timer = {
         .speed_mode       = LEDC_MODE,
         .duty_resolution  = LEDC_DUTY_RES,
@@ -80,7 +80,7 @@ void app_main(void)
     };
     ESP_ERROR_CHECK(ledc_timer_config(&ledc_timer));
 
-    // 5. Конфігурація LEDC Каналу
+    // 6. Конфігурація LEDC Каналу
     ledc_channel_config_t ledc_channel = {
         .speed_mode     = LEDC_MODE,
         .channel        = LEDC_CHANNEL,
@@ -96,6 +96,6 @@ void app_main(void)
 
     while (1) {
         //ESP_LOGI(TAG, "tick");
-        vTaskDelay(pdMS_TO_TICKS(30)); // Wait for 1 second
+        vTaskDelay(pdMS_TO_TICKS(30)); // Wait
     }
 }
