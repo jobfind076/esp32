@@ -5,10 +5,10 @@
 #include "esp_log.h"
 
 //  
-//  MCU pin GND -> Resistor 330 Om -> LED -> MCU pin 2 
+//  MCU pin GND -> Resistor 330 Om -> LED -> MCU pin 5 
 //
 
-#define BLINK_GPIO GPIO_NUM_2
+#define BLINK_GPIO GPIO_NUM_5
 
 static const char *TAG = "blink";
 
