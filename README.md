@@ -1,1 +1,1 @@
-# esp32
+# Samples for esp32-s3
