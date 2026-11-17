@@ -32,7 +32,7 @@ static void rpm_timer_callback(void* arg)
 
     // Обчислюємо миттєвий RPM:
     // (імпульси / імпульси_на_оберт) * (60000 мс / період_вимірювання_мс)
-    float raw_rpm = ((float)pulse_count / PULSES_PER_REV) * (60000.0f / SAMPLE_PERIOD_MS);
+    float raw_rpm = ((float)pulse_count / PULSES_PER_REV) / 4 * (60000.0f / SAMPLE_PERIOD_MS);
 
     // Застосовуємо фільтр EMA
     filtered_rpm = (EMA_ALPHA * raw_rpm) + ((1.0f - EMA_ALPHA) * filtered_rpm);

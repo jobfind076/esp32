@@ -6,10 +6,10 @@
 #include "freertos/task.h"
 #include <stdio.h>
 
-#define ENCODER_GPIO_A 4
-#define LED_GPIO 6
-#define PULSES_PER_REV 20
-#define EMA_ALPHA 0.2f
+#define ENCODER_GPIO_A   4
+#define LED_GPIO         6
+#define PULSES_PER_REV   20
+#define EMA_ALPHA        0.2f
 #define SAMPLE_PERIOD_MS 100 // Період вимірювання в мс
 
 static const char* TAG = "LED_RPM_EMA_ENC";
@@ -46,7 +46,7 @@ void app_main(void)
 
     // Фільтр від дребезгу
     pcnt_glitch_filter_config_t filter_config = {
-        .max_glitch_ns = 1000,
+        .max_glitch_ns = 5000,
     };
     ESP_ERROR_CHECK(pcnt_unit_set_glitch_filter(pcnt_unit, &filter_config));
 
@@ -73,13 +73,14 @@ void app_main(void)
         total_pulses_acc += delta_pulses;
 
         // Перевірка на кожний повний оберт (20 імпульсів)
-        if (total_pulses_acc >= PULSES_PER_REV) 
+        if ((total_pulses_acc % PULSES_PER_REV) == 0)
         {
-            if ((total_pulses_acc % PULSES_PER_REV) == 0)
-            {
-                led_state = !led_state;
-                gpio_set_level(LED_GPIO, led_state); // вмикаємо/перемикаємо світлодіод на кожний повний оберт
-            }
+            led_state = !led_state;
+            gpio_set_level(LED_GPIO, led_state); // вмикаємо/перемикаємо світлодіод на кожний повний оберт
+        }
+        else
+        {
+            gpio_set_level(LED_GPIO, 0);
         }
 
         // Розрахунок RPM за період:
@@ -89,7 +90,7 @@ void app_main(void)
         // Застосування фільтра EMA: RPM_filtered = alpha * RPM_instant + (1 - alpha) * RPM_filtered_prev
         filtered_rpm = EMA_ALPHA * instant_rpm + (1.0f - EMA_ALPHA) * filtered_rpm;
 
-        ESP_LOGI(TAG, "Total pulses: %d | Delta Pulses: %d | Instant RPM: %.1f | EMA RPM: %.1f",
-            total_pulses_acc, delta_pulses, instant_rpm, filtered_rpm);
+        ESP_LOGI(TAG, "Count: %d | Total pulses: %d | Delta Pulses: %d | Instant RPM: %.1f | EMA RPM: %.1f",
+            current_pulse_count, total_pulses_acc, delta_pulses, instant_rpm, filtered_rpm);
     }
 }
