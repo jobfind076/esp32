@@ -14,7 +14,7 @@ static const char *TAG = "RTC_OLED";
 #define I2C_PORT_NUM I2C_NUM_0
 #define I2C_SDA_PIN GPIO_NUM_8
 #define I2C_SCL_PIN GPIO_NUM_9
-#define I2C_FREQ_HZ 400000
+#define I2C_FREQ_HZ 100000
 
 // Адреси пристроїв
 #define DS1307_ADDR    0x68
